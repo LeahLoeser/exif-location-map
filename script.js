@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('fileInput').addEventListener('change', handleFileSelect);
 
-    // Leaflet map initialization
-    const map = L.map('map').setView([0, 0], 2); // Initial view, you can adjust this
+    // initialize leaflet map
+    const map = L.map('map').setView([0, 0], 2);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
        attribution: '© OpenStreetMap contributors'
@@ -24,18 +24,18 @@ document.addEventListener('DOMContentLoaded', function () {
           const arrayBuffer = e.target.result;
           const exifData = EXIF.readFromBinaryFile(arrayBuffer);
 
-          // Check if GPS data is available
+          // check if location data is available
           if (exifData && exifData.GPSLatitude && exifData.GPSLongitude) {
-             // Convert degrees, minutes, seconds to decimal degrees
+             // convert degrees, minutes, seconds to decimal degrees
              const latitude = convertDMSToDD(exifData.GPSLatitude[0], exifData.GPSLatitude[1], exifData.GPSLatitude[2], exifData.GPSLatitudeRef);
              const longitude = convertDMSToDD(exifData.GPSLongitude[0], exifData.GPSLongitude[1], exifData.GPSLongitude[2], exifData.GPSLongitudeRef);
 
-             // Reverse latitude and longitude if needed
+             // reverse latitude and longitude if needed
              L.marker([latitude, longitude]).addTo(map)
                 .bindPopup('Your Photo Location').openPopup();
 
-             // Set the map view to the photo location
-             map.setView([latitude, longitude], 15); // Adjust the zoom level as needed
+             // set the map view to photo location
+             map.setView([latitude, longitude], 15); // zoom level
           } else {
              console.error('No GPS data available in the photo.');
           }
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
        reader.readAsArrayBuffer(file);
     }
 
-    // Helper function to convert degrees, minutes, seconds to decimal degrees
+    // function to help convert degrees, minutes, seconds to decimal degrees
     function convertDMSToDD(degrees, minutes, seconds, direction) {
        let dd = degrees + minutes / 60 + seconds / 3600;
        return (direction === 'S' || direction === 'W') ? -dd : dd;
